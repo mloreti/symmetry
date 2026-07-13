@@ -7,7 +7,7 @@ A small static web app for your daily workout, driven by a fixed weekly schedule
 - **Saturday** — running (no structured tracking here — just a reminder screen).
 - **Sunday** — rest day.
 
-The app looks at today's date, checks `data/schedule.json` to see what kind of day it is, and shows the right screen automatically.
+The app looks at today's date, checks `data/schedule.json` to see what kind of day it is, and shows that screen by default. If you skipped a day, use the **Workout** picker at the top to switch to any other workout ad-hoc — the weekday label still shows the real day, just paired with whatever content you picked.
 
 ## Editing your schedule
 
@@ -69,4 +69,4 @@ Then open `http://localhost:8000/`.
 
 - Reloading mid-workout resets your current exercise/set/phase progress for that visit (only load overrides persist).
 - No sound or vibration — timer feedback is visual only.
-- Which day you see is based on the device's local date/weekday — there's no way to preview a different day in-app.
+- Switching workouts via the picker isn't remembered across a reload — it resets to today's scheduled default (consistent with the point above).

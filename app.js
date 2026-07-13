@@ -109,13 +109,7 @@ function sAllDoneThis() { return sState.setsDone[sState.exerciseIndex].every(Boo
 function sIsWorkoutDone() { return sIsLast() && sAllDoneThis(); }
 function sAdvanceLabel() { return sIsLast() ? 'Finish' : (sAllDoneThis() ? 'Next exercise' : 'Skip to next'); }
 
-function initStrength(day, weekdayLabel) {
-  sState.day = day;
-  sState.weekdayLabel = weekdayLabel;
-  sState.exerciseIndex = 0;
-  sState.setsDone = day.exercises.map(e => Array(e.sets).fill(false));
-  sState.loads = day.exercises.map(e => readPersistedLoad(e.name) ?? e.load);
-
+function bindStrengthListenersOnce() {
   sEl.prevBtn.addEventListener('click', sGoPrev);
   sEl.nextBtn.addEventListener('click', sGoNext);
   sEl.loadDec.addEventListener('click', () => sBumpLoad(-5));
@@ -126,6 +120,17 @@ function initStrength(day, weekdayLabel) {
     const row = e.target.closest('.set-row');
     if (row) sToggleSet(Number(row.dataset.setIndex));
   });
+}
+
+function loadStrengthDay(day, weekdayLabel) {
+  sState.day = day;
+  sState.weekdayLabel = weekdayLabel;
+  sState.exerciseIndex = 0;
+  sState.setsDone = day.exercises.map(e => Array(e.sets).fill(false));
+  sState.loads = day.exercises.map(e => readPersistedLoad(e.name) ?? e.load);
+  sState.resting = false;
+  sState.restRemaining = 0;
+  sState.restTotal = 0;
 
   sEl.screen.hidden = false;
   sRender();
@@ -305,18 +310,22 @@ function describeIntervalSummary(workout, phases) {
   return `${workout.rounds} rounds of ${formatMMSS(workout.workSeconds)} work / ${formatMMSS(workout.recoverySeconds || 0)} recovery · ~${totalMin} min total`;
 }
 
-function initIntervals(workout, weekdayLabel) {
+function bindIntervalListenersOnce() {
+  iEl.startBtn.addEventListener('click', iStart);
+  iEl.skipBtn.addEventListener('click', iSkipPhase);
+}
+
+function loadIntervalWorkout(workout, weekdayLabel) {
   const phases = buildIntervalPhases(workout);
   iState.phases = phases;
   iState.phaseIndex = -1;
+  iState.remaining = 0;
+  iState.total = 0;
 
   iEl.dayLabel.textContent = weekdayLabel;
   iEl.title.textContent = workout.label;
   iEl.note.textContent = workout.note || '';
   iEl.summary.textContent = describeIntervalSummary(workout, phases);
-
-  iEl.startBtn.addEventListener('click', iStart);
-  iEl.skipBtn.addEventListener('click', iSkipPhase);
 
   iEl.screen.hidden = false;
   iRender();
@@ -395,7 +404,7 @@ const nEl = {
   note: $('n-note'),
 };
 
-function initNote(entry, weekdayLabel) {
+function loadNote(entry, weekdayLabel) {
   nEl.dayLabel.textContent = weekdayLabel;
   nEl.title.textContent = entry.label;
   nEl.note.textContent = entry.note || '';
@@ -403,8 +412,72 @@ function initNote(entry, weekdayLabel) {
 }
 
 // ---------------------------------------------------------------------------
-// Boot: resolve today's weekday against schedule.json, then route to the
-// right screen type.
+// Ad-hoc workout picker: today's weekday still picks the default, but any
+// workout can be selected regardless of the calendar (e.g. you skipped
+// Monday, so you want Day 1 on Tuesday instead of the scheduled Day 2).
+// ---------------------------------------------------------------------------
+const pickerEl = $('workout-select');
+const PICKER_ORDER = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+let programData = null;
+let intervalsDataGlobal = null;
+let pickerEntries = [];
+let todayWeekdayLabel = '';
+
+function entryKey(entry) {
+  return entry.type === 'note' ? `note:${entry.label}` : `${entry.type}:${entry.ref}`;
+}
+
+function buildPickerEntries(schedule) {
+  const seen = new Set();
+  const entries = [];
+  PICKER_ORDER.forEach((key) => {
+    const entry = schedule[key];
+    const dedupeKey = entryKey(entry);
+    if (seen.has(dedupeKey)) return;
+    seen.add(dedupeKey);
+    let label;
+    if (entry.type === 'strength') label = programData[entry.ref]?.dayLabel ?? entry.ref;
+    else if (entry.type === 'intervals') label = intervalsDataGlobal[entry.ref]?.label ?? entry.ref;
+    else label = entry.label;
+    entries.push({ entry, label });
+  });
+  return entries;
+}
+
+function populatePicker(defaultEntry) {
+  pickerEl.innerHTML = pickerEntries.map((e, i) => `<option value="${i}">${e.label}</option>`).join('');
+  const idx = pickerEntries.findIndex(e => entryKey(e.entry) === entryKey(defaultEntry));
+  pickerEl.value = String(idx === -1 ? 0 : idx);
+}
+
+function activateEntry(entry) {
+  clearCountdown();
+  sEl.screen.hidden = true;
+  iEl.screen.hidden = true;
+  nEl.screen.hidden = true;
+  try {
+    if (entry.type === 'strength') {
+      const day = programData[entry.ref];
+      if (!day) throw new Error(`schedule.json references unknown strength day "${entry.ref}".`);
+      validateStrengthDay(day, entry.ref);
+      loadStrengthDay(day, todayWeekdayLabel);
+    } else if (entry.type === 'intervals') {
+      const workout = intervalsDataGlobal[entry.ref];
+      if (!workout) throw new Error(`schedule.json references unknown interval workout "${entry.ref}".`);
+      validateIntervalWorkout(workout, entry.ref);
+      loadIntervalWorkout(workout, todayWeekdayLabel);
+    } else {
+      loadNote(entry, todayWeekdayLabel);
+    }
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Boot: resolve today's weekday against schedule.json for the default
+// selection, then wire up the picker and the (bind-once) screen listeners.
 // ---------------------------------------------------------------------------
 function validateSchedule(schedule) {
   WEEKDAY_KEYS.forEach((key) => {
@@ -423,43 +496,37 @@ function validateSchedule(schedule) {
 }
 
 async function boot() {
-  let schedule, program, intervalsData;
+  let schedule;
   try {
+    let program, intervalsData;
     [schedule, program, intervalsData] = await Promise.all([
       fetchJson('data/schedule.json'),
       fetchJson('data/program.json'),
       fetchJson('data/intervals.json'),
     ]);
     validateSchedule(schedule);
+    programData = program;
+    intervalsDataGlobal = intervalsData;
   } catch (err) {
     showError(err.message);
     return;
   }
 
   const todayKey = WEEKDAY_KEYS[new Date().getDay()];
-  const entry = schedule[todayKey];
-  const weekdayLabel = WEEKDAY_LABELS[todayKey];
+  const todayEntry = schedule[todayKey];
+  todayWeekdayLabel = WEEKDAY_LABELS[todayKey];
 
-  try {
-    if (entry.type === 'strength') {
-      const day = program[entry.ref];
-      if (!day) throw new Error(`schedule.json references unknown strength day "${entry.ref}".`);
-      validateStrengthDay(day, entry.ref);
-      $('app').hidden = false;
-      initStrength(day, weekdayLabel);
-    } else if (entry.type === 'intervals') {
-      const workout = intervalsData[entry.ref];
-      if (!workout) throw new Error(`schedule.json references unknown interval workout "${entry.ref}".`);
-      validateIntervalWorkout(workout, entry.ref);
-      $('app').hidden = false;
-      initIntervals(workout, weekdayLabel);
-    } else {
-      $('app').hidden = false;
-      initNote(entry, weekdayLabel);
-    }
-  } catch (err) {
-    showError(err.message);
-  }
+  pickerEntries = buildPickerEntries(schedule);
+  populatePicker(todayEntry);
+  pickerEl.addEventListener('change', () => {
+    activateEntry(pickerEntries[Number(pickerEl.value)].entry);
+  });
+
+  bindStrengthListenersOnce();
+  bindIntervalListenersOnce();
+
+  $('app').hidden = false;
+  activateEntry(todayEntry);
 }
 
 boot();
