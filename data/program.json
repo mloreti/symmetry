@@ -1,0 +1,43 @@
+{
+  "day1": {
+    "dayLabel": "Day 1",
+    "exercises": [
+      { "name": "Leg Press", "option": "Uni · Triple Xt", "load": 45, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Calf Raises", "option": "Bent Knee · Uni", "load": 40, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Chest Press", "option": "Machine", "load": 90, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Upper Body Pull", "option": "Assisted Pullup · Wide Grip", "load": 65, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Spine Rotation", "option": "Cable 0", "load": 20, "sets": 3, "repsMax": 7, "rest": 120 }
+    ]
+  },
+  "day2": {
+    "dayLabel": "Day 2",
+    "exercises": [
+      { "name": "Hip Abduction", "option": "Machine", "load": 120, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Hip Adduction", "option": "Machine", "load": 155, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Pec Dec", "option": "Machine", "load": 80, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Reverse Pec Dec", "option": "Machine", "load": 65, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Shrugs", "option": "Dumbbell", "load": 50, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Spine Side Bend", "option": "Dumbbell", "load": 40, "sets": 3, "repsMax": 7, "rest": 120 }
+    ]
+  },
+  "day3": {
+    "dayLabel": "Day 3",
+    "exercises": [
+      { "name": "Hip Extension (iso spine)", "option": "Machine · Uni", "load": 135, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Incline Press", "option": "Dumbbell 3", "load": 50, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Row", "option": "Palms Face Each Other", "load": 105, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Spinal Flex", "option": "Crunch Machine", "load": 0, "sets": 3, "repsMax": 7, "rest": 120 }
+    ]
+  },
+  "day4": {
+    "dayLabel": "Day 4",
+    "exercises": [
+      { "name": "Knee Extension", "option": "Machine · Uni", "load": 35, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Knee Flexion", "option": "Machine · Uni", "load": 45, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Lateral Raise", "option": "Manual", "load": 20, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Elbow Flexion", "option": "Machine", "load": 30, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Elbow Extension", "option": "Machine", "load": 35, "sets": 3, "repsMax": 7, "rest": 120 },
+      { "name": "Spine Extension (iso hip)", "option": "Angled Bench · Uni", "load": 0, "sets": 3, "repsMax": 7, "rest": 120 }
+    ]
+  }
+}

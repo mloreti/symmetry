@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Workout of the Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main id="app" hidden>
+
+  <section id="screen-strength" hidden>
+    <div class="topbar">
+      <div class="topbar-row">
+        <div class="day-label" id="s-day-label"></div>
+        <div class="progress-label" id="s-progress-label"></div>
+      </div>
+      <h1 class="title">Workout of the Day</h1>
+      <div class="dots" id="s-dots"></div>
+    </div>
+
+    <div class="content">
+      <div class="nav-row">
+        <button class="nav-btn" id="s-prev-btn" aria-label="Previous exercise">
+          <svg width="10" height="16" viewBox="0 0 10 16"><path d="M9 1L2 8L9 15" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="option-label" id="s-option-label"></div>
+        <button class="nav-btn" id="s-next-btn" aria-label="Next exercise">
+          <svg width="10" height="16" viewBox="0 0 10 16"><path d="M1 1L8 8L1 15" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="exercise-block">
+        <div class="exercise-name" id="s-exercise-name"></div>
+        <div class="load-pill">
+          <span class="load-label">Load</span>
+          <button class="load-btn" id="s-load-dec" aria-label="Decrease load">&minus;</button>
+          <span class="load-value" id="s-load-value"></span>
+          <button class="load-btn load-btn-inc" id="s-load-inc" aria-label="Increase load">+</button>
+        </div>
+      </div>
+
+      <div class="rest-view" id="s-rest-view" hidden>
+        <div class="rest-label">Rest</div>
+        <div class="ring-wrap">
+          <svg width="200" height="200" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="90" stroke-width="10" fill="none" class="ring-track"/>
+            <circle id="s-ring-progress" cx="100" cy="100" r="90" stroke-width="10" fill="none"
+                    stroke-linecap="round" class="ring-progress"
+                    stroke-dasharray="565.5" stroke-dashoffset="565.5"
+                    transform="rotate(-90 100 100)"/>
+          </svg>
+          <div class="rest-countdown" id="s-rest-countdown"></div>
+        </div>
+        <button class="skip-rest-btn" id="s-skip-rest-btn">Skip rest</button>
+      </div>
+
+      <div class="sets-view" id="s-sets-view">
+        <div class="sets-list" id="s-sets-list"></div>
+      </div>
+    </div>
+
+    <div class="bottombar">
+      <div class="complete-banner" id="s-complete-banner" hidden>Workout complete &#127881;</div>
+      <button class="advance-btn" id="s-advance-btn"></button>
+    </div>
+  </section>
+
+  <section id="screen-intervals" hidden>
+    <div class="topbar">
+      <div class="topbar-row">
+        <div class="day-label" id="i-day-label"></div>
+      </div>
+      <h1 class="title" id="i-title"></h1>
+      <p class="note-text" id="i-note"></p>
+    </div>
+
+    <div class="content content-center">
+      <div id="i-start-view">
+        <p class="phase-summary" id="i-summary"></p>
+        <button class="advance-btn primary" id="i-start-btn">Start</button>
+      </div>
+
+      <div id="i-phase-view" hidden>
+        <div class="rest-label" id="i-phase-label"></div>
+        <div class="ring-wrap">
+          <svg width="200" height="200" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="90" stroke-width="10" fill="none" class="ring-track"/>
+            <circle id="i-ring-progress" cx="100" cy="100" r="90" stroke-width="10" fill="none"
+                    stroke-linecap="round" class="ring-progress"
+                    stroke-dasharray="565.5" stroke-dashoffset="565.5"
+                    transform="rotate(-90 100 100)"/>
+          </svg>
+          <div class="rest-countdown" id="i-countdown"></div>
+        </div>
+        <div class="phase-next" id="i-next-label"></div>
+        <button class="skip-rest-btn" id="i-skip-btn">Skip</button>
+      </div>
+
+      <div id="i-complete-view" hidden>
+        <div class="complete-banner">Workout complete &#127881;</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-note" hidden>
+    <div class="topbar">
+      <div class="day-label" id="n-day-label"></div>
+      <h1 class="title" id="n-title"></h1>
+    </div>
+    <div class="content content-center">
+      <p class="note-text" id="n-note"></p>
+    </div>
+  </section>
+
+</main>
+
+<div id="error" class="error" hidden>
+  <p>Couldn't load today's workout.</p>
+  <p id="error-detail" class="error-detail"></p>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+:root {
+  --bg: #eef1ec;
+  --card-alt: #ffffff;
+  --accent: #2f6f4f;
+  --accent-tint: #e8f0e9;
+  --accent-tint-2: #eef5ee;
+  --muted-1: #7a8a7d;
+  --muted-2: #8b978d;
+  --muted-3: #a9b6ab;
+  --muted-4: #b9c2ba;
+  --text: #1a1a1a;
+  --border: #dde3da;
+  --border-2: #e3e8e0;
+}
+
+* { box-sizing: border-box; }
+
+/* Author rules setting `display` on an element normally beat the browser's
+   default [hidden]{display:none}, since author-origin styles win ties with
+   user-agent styles regardless of specificity. Several elements here are
+   toggled via the `hidden` DOM property while also having their own
+   `display: flex` rule (for layout when visible) — without this, they'd
+   render even while "hidden". !important forces hidden to always win. */
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+#app > section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.content-center {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+}
+.content-center > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.topbar {
+  padding: max(20px, env(safe-area-inset-top)) 24px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.topbar-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.day-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-1);
+}
+
+.progress-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.dot {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+}
+.dot.current { background: var(--accent); opacity: 1; }
+.dot.passed { background: var(--accent); opacity: 0.6; }
+.dot.upcoming { background: var(--border); opacity: 1; }
+
+.content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 4px 24px 0;
+  overflow: auto;
+}
+
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.nav-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  border: none;
+  background: var(--card-alt);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  cursor: pointer;
+}
+.nav-btn:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.option-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-3);
+  text-align: center;
+  padding: 0 8px;
+}
+
+.exercise-block {
+  text-align: center;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.exercise-name {
+  font-size: 25px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.load-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  background: var(--accent-tint);
+  padding: 6px 8px 6px 14px;
+  border-radius: 999px;
+}
+
+.load-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.load-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  border: none;
+  background: var(--card-alt);
+  color: var(--accent);
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  line-height: 1;
+}
+.load-btn-inc {
+  background: var(--accent);
+  color: #fff;
+}
+
+.load-value {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  min-width: 50px;
+  text-align: center;
+}
+
+.rest-view {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 12px 0;
+}
+
+.rest-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-1);
+}
+
+.ring-wrap {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-track { stroke: var(--border-2); }
+.ring-progress {
+  stroke: var(--accent);
+  transition: stroke-dashoffset 1s linear;
+}
+
+.rest-countdown {
+  position: absolute;
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.skip-rest-btn {
+  border: none;
+  background: none;
+  color: var(--muted-1);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 10px;
+  min-height: 44px;
+}
+
+.sets-view {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.sets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.set-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  background: var(--card-alt);
+  border: none;
+  border-radius: 16px;
+  padding: 14px;
+  min-height: 44px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  text-align: left;
+}
+.set-row.done { background: var(--accent-tint-2); }
+
+.set-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--muted-3);
+}
+.set-circle.done {
+  background: var(--accent);
+  border: none;
+  color: #fff;
+}
+
+.set-copy { flex: 1; }
+
+.set-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.set-subtitle {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted-2);
+}
+
+.set-status {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted-4);
+}
+.set-status.done { color: var(--accent); }
+
+.bottombar {
+  padding: 8px 24px max(20px, env(safe-area-inset-bottom));
+  flex-shrink: 0;
+}
+
+.complete-banner {
+  background: var(--accent);
+  color: #fff;
+  text-align: center;
+  padding: 16px;
+  border-radius: 16px;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.advance-btn {
+  width: 100%;
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  min-height: 44px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 800;
+}
+.advance-btn.primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(47, 111, 79, 0.35);
+}
+.advance-btn.muted {
+  background: var(--accent-tint);
+  color: #5c7a60;
+}
+
+.note-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--muted-1);
+  line-height: 1.4;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.phase-summary {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted-1);
+  line-height: 1.4;
+  max-width: 280px;
+  margin: 0 auto 20px;
+}
+
+.phase-next {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.error {
+  max-width: 480px;
+  margin: 80px auto;
+  padding: 0 24px;
+  text-align: center;
+  color: var(--text);
+}
+.error-detail {
+  color: var(--muted-1);
+  font-size: 14px;
+}
