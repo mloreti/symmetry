@@ -1,9 +1,11 @@
 {
-  "monday": { "type": "strength", "ref": "day1" },
-  "tuesday": { "type": "strength", "ref": "day2" },
-  "wednesday": { "type": "intervals", "ref": "norwegian4x4" },
-  "thursday": { "type": "strength", "ref": "day3" },
-  "friday": { "type": "strength", "ref": "day4" },
-  "saturday": { "type": "note", "label": "Running", "note": "Easy run — no structured intervals today." },
-  "sunday": { "type": "note", "label": "Rest Day", "note": "No workout today. Recover." }
+  "rotation": [
+    { "type": "strength", "ref": "day1" },
+    { "type": "strength", "ref": "day2" },
+    { "type": "intervals", "ref": "norwegian4x4" },
+    { "type": "strength", "ref": "day3" },
+    { "type": "strength", "ref": "day4" },
+    { "type": "note", "label": "Running", "note": "Easy run — no structured intervals today." },
+    { "type": "note", "label": "Rest Day", "note": "No workout today. Recover." }
+  ]
 }

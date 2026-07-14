@@ -14,7 +14,13 @@
 
   <div class="switcher">
     <label class="switcher-label" for="workout-select">Workout</label>
-    <select id="workout-select" class="switcher-select" aria-label="Choose a workout"></select>
+    <div class="switcher-actions">
+      <select id="workout-select" class="switcher-select" aria-label="Choose a workout"></select>
+      <button class="history-btn" id="history-open-btn" aria-label="View workout history">
+        <svg width="15" height="15" viewBox="0 0 16 16"><path d="M2 3h12M2 8h12M2 13h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span>Log</span>
+      </button>
+    </div>
   </div>
 
   <section id="screen-strength" hidden>
@@ -106,7 +112,8 @@
       </div>
 
       <div id="i-complete-view" hidden>
-        <div class="complete-banner">Workout complete &#127881;</div>
+        <div class="complete-banner" id="i-complete-banner">Workout complete &#127881;</div>
+        <button class="advance-btn primary" id="i-log-btn">Mark Done</button>
       </div>
     </div>
   </section>
@@ -119,6 +126,24 @@
     <div class="content content-center">
       <p class="note-text" id="n-note"></p>
     </div>
+    <div class="bottombar">
+      <button class="advance-btn primary" id="n-log-btn">Mark Done</button>
+    </div>
+  </section>
+
+  <section id="screen-history" hidden>
+    <div class="topbar">
+      <div class="topbar-row">
+        <div class="day-label">History</div>
+        <button class="nav-btn" id="history-close-btn" aria-label="Close history">
+          <svg width="13" height="13" viewBox="0 0 14 14"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <h1 class="title">Workout Log</h1>
+    </div>
+    <div class="content">
+      <div class="history-list" id="history-list"></div>
+    </div>
   </section>
 
 </main>
@@ -128,6 +153,7 @@
   <p id="error-detail" class="error-detail"></p>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
 </body>
 </html>

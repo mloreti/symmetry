@@ -85,6 +85,28 @@ button {
   color: var(--muted-2);
 }
 
+.switcher-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.history-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted-1);
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 12px;
+  min-height: 36px;
+  cursor: pointer;
+}
+
 .switcher-select {
   font: inherit;
   font-size: 14px;
@@ -406,6 +428,9 @@ button {
   font-size: 16px;
   font-weight: 800;
 }
+.advance-btn:disabled {
+  cursor: not-allowed;
+}
 .advance-btn.primary {
   background: var(--accent);
   color: #fff;
@@ -440,6 +465,46 @@ button {
   color: var(--muted-2);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 24px;
+}
+
+.history-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--card-alt);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.history-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.history-date {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted-2);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.history-empty {
+  color: var(--muted-1);
+  font-size: 14px;
+  text-align: center;
+  margin-top: 40px;
 }
 
 .error {
