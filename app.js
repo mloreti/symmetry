@@ -579,6 +579,7 @@ function nRender() {
 const hEl = {
   screen: $('screen-history'),
   list: $('history-list'),
+  progressList: $('progress-list'),
   openBtn: $('history-open-btn'),
   closeBtn: $('history-close-btn'),
 };
@@ -592,6 +593,42 @@ function bindHistoryListenersOnce() {
 
 function formatHistoryDate(iso) {
   return new Date(iso).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+// Every exercise across all strength days, deduped by name in first-seen
+// (rotation) order, pairing its program.json baseline load against whatever
+// is currently persisted — a quick before/after progress view.
+function buildExerciseProgress() {
+  const seen = new Set();
+  const rows = [];
+  rotationData.forEach((entry) => {
+    if (entry.type !== 'strength') return;
+    const day = programData[entry.ref];
+    if (!day) return;
+    day.exercises.forEach((ex) => {
+      if (seen.has(ex.name)) return;
+      seen.add(ex.name);
+      rows.push({
+        name: ex.name,
+        starting: ex.load,
+        current: readPersistedLoad(ex.name) ?? ex.load,
+      });
+    });
+  });
+  return rows;
+}
+
+function renderExerciseProgress() {
+  const rows = buildExerciseProgress();
+  if (rows.length === 0) {
+    hEl.progressList.innerHTML = `<p class="history-empty">No exercises yet.</p>`;
+    return;
+  }
+  hEl.progressList.innerHTML = rows.map(row => `
+    <div class="progress-row">
+      <span class="progress-name">${row.name}</span>
+      <span class="progress-loads ${row.current > row.starting ? 'increased' : ''}">${row.starting} → ${row.current} lb</span>
+    </div>`).join('');
 }
 
 function renderHistory() {
@@ -608,8 +645,14 @@ function renderHistory() {
 }
 
 function openHistory() {
+  // Guard against a double-tap firing this twice before closeHistory() runs:
+  // a second call would find every workout screen already hidden (from the
+  // first call) and overwrite activeScreenEl with null, leaving nothing to
+  // restore on close.
+  if (!hEl.screen.hidden) return;
   activeScreenEl = [sEl.screen, iEl.screen, nEl.screen].find(el => !el.hidden) || null;
   if (activeScreenEl) activeScreenEl.hidden = true;
+  renderExerciseProgress();
   renderHistory();
   hEl.screen.hidden = false;
 }

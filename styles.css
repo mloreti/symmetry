@@ -404,13 +404,16 @@ button {
 .set-status.done { color: var(--accent); }
 
 .bottombar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   padding: 8px 24px max(20px, env(safe-area-inset-bottom));
   flex-shrink: 0;
 }
 
 .complete-banner {
-  background: var(--accent);
-  color: #fff;
+  background: var(--accent-tint);
+  color: var(--accent);
   text-align: center;
   padding: 16px;
   border-radius: 16px;
@@ -466,6 +469,47 @@ button {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
+.section-heading {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-1);
+  margin: 20px 0 10px;
+}
+.section-heading-first { margin-top: 0; }
+
+.progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--card-alt);
+  border-radius: 14px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.progress-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.progress-loads {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted-2);
+  white-space: nowrap;
+}
+.progress-loads.increased { color: var(--accent); }
 
 .history-list {
   display: flex;
